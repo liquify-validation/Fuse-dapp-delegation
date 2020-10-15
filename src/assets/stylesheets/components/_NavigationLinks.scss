@@ -11,7 +11,7 @@
 .nl-NavigationLinks_Link {
     @include not-selectable-text();
     align-items: center;
-    color: #fff;
+    color: #000000;
     display: flex;
     font-size: 14px;
     font-weight: 700;
@@ -34,11 +34,11 @@
     }
 
     &#{ & }-core {
-        color: #fff;
+        color: #000000;
 
         &:active,
         &.active {
-            background-color: darken($poa-purple-darker, 10%);
+            background-color: darken($fuse-green-dark, 10%);
 
             @media (min-width: $breakpoint-md) {
                 background-color: transparent;

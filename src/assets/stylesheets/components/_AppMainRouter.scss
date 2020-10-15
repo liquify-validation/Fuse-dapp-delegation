@@ -19,7 +19,7 @@
     z-index: 1;
 
     &:before {
-        background-color: rgba($poa-purple, 0.5);
+        background-color: rgba($fuse-green-light, 0.5);
         bottom: 0;
         content: '';
         display: none;
@@ -38,7 +38,7 @@
 
     &#{ & }-core {
         &:before {
-            background-color: rgba($poa-purple, 0.5);
+            background-color: rgba($fuse-green-light, 0.5);
         }
     }
 

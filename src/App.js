@@ -38,12 +38,12 @@ class App extends Component {
       web3Config: {},
       form: {
         fullAddress: '',
-        expirationDate: '',
+        selfStaked: '',
         postal_code: '',
         us_state: '',
         firstName: '',
         lastName: '',
-        licenseId: '',
+        stakedAmount: '',
         contactEmail: '',
         isCompany: helpers.isCompanyAllowed(Number(this.props.web3Config.netId))
       },
@@ -78,8 +78,8 @@ class App extends Component {
           First Name: <b>${pendingChange.firstName}</b> <br/>
           Last Name: <b>${pendingChange.lastName}</b> <br/>
           Full Address: <b>${pendingChange.fullAddress}</b> <br/>
-          Expiration Date: <b>${pendingChange.expirationDate}</b> <br />
-          License ID: <b>${pendingChange.licenseId}</b> <br/>
+          Expiration Date: <b>${pendingChange.selfStaked}</b> <br />
+          License ID: <b>${pendingChange.stakedAmount}</b> <br/>
           US state: <b>${pendingChange.us_state}</b> <br/>
           Zip Code: <b>${pendingChange.postal_code}</b> <br/>
         `
@@ -89,12 +89,12 @@ class App extends Component {
     this.setState({
       form: {
         fullAddress: currentData.fullAddress,
-        expirationDate: currentData.expirationDate,
+        selfStaked: currentData.selfStaked,
         postal_code: currentData.postal_code,
         us_state: currentData.us_state,
         firstName: currentData.firstName,
         lastName: currentData.lastName,
-        licenseId: currentData.licenseId,
+        stakedAmount: currentData.stakedAmount,
         contactEmail: currentData.contactEmail,
         isCompany: hasData ? currentData.isCompany : this.state.form.isCompany
       },
@@ -140,7 +140,7 @@ class App extends Component {
         helpers.generateAlert('warning', 'Warning!', `Please fill in all the fields - some of them are empty`)
         return false
       }
-      const isAfter = moment(this.state.form.expirationDate).isAfter(moment())
+      const isAfter = moment(this.state.form.selfStaked).isAfter(moment())
       if (!isAfter) {
         this.setState({ loading: false })
         helpers.generateAlert('warning', 'Warning!', 'Expiration date should be valid')
@@ -208,11 +208,11 @@ class App extends Component {
       .createMetadata({
         firstName: this.state.form.firstName,
         lastName: this.state.form.lastName,
-        licenseId: this.state.form.licenseId,
+        stakedAmount: this.state.form.stakedAmount,
         fullAddress: this.state.form.fullAddress,
         state: this.state.form.us_state,
         zipcode: this.state.form.postal_code,
-        expirationDate: moment(this.state.form.expirationDate).unix(),
+        selfStaked: moment(this.state.form.selfStaked).unix(),
         contactEmail: this.state.form.contactEmail,
         isCompany: this.state.form.isCompany,
         votingKey: this.getVotingKey(),
@@ -339,19 +339,19 @@ class App extends Component {
               )}
               {isCompany ? null : (
                 <FormInput
-                  id="licenseId"
+                  id="stakedAmount"
                   onChange={this.onChangeFormField}
                   title="License id"
-                  value={this.state.form.licenseId}
+                  value={this.state.form.stakedAmount}
                 />
               )}
               {isCompany ? null : (
                 <FormInput
-                  id="expirationDate"
+                  id="selfStaked"
                   onChange={this.onChangeFormField}
                   title="License expiration"
                   type="date"
-                  value={this.state.form.expirationDate}
+                  value={this.state.form.selfStaked}
                 />
               )}
               {isCompany ? null : (

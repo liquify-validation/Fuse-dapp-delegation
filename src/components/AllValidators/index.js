@@ -166,21 +166,21 @@ export default class AllValidators extends Component {
           address={validator.address}
           contactEmail={validator.contactEmail}
           createdDate={validator.createdDate}
-          expirationDate={validator.expirationDate}
+          selfStaked={validator.selfStaked}
           firstName={validator.firstName}
           fullAddress={validator.fullAddress}
           index={validator.index}
           isCompany={validator.isCompany}
           key={index}
           lastName={validator.lastName}
-          licenseId={validator.licenseId}
+          stakedAmount={validator.stakedAmount}
           metadataContract={this.props.web3Config.metadataContract}
           methodToCall={this.props.methodToCall}
           netId={this.state.netId}
           networkBranch={networkBranch}
           physicalAddresses={validator.physicalAddresses}
           postal_code={validator.postal_code}
-          updatedDate={validator.updatedDate}
+          delegatedAmount={validator.delegatedAmount}
           us_state={validator.us_state}
         >
           {childrenWithProps}
@@ -188,9 +188,16 @@ export default class AllValidators extends Component {
       )
     }
     const isValidatorsPage = this.props.methodToCall === 'getAllValidatorsData'
-    const validatorsCount = isValidatorsPage
+    var validatorsCount = isValidatorsPage
       ? `Total number of validators: <strong>${this.state.validators.length}</strong>`
       : ''
+    if (isValidatorsPage) {
+      var staked = 0
+      for (let key of this.state.validators) {
+        staked += parseFloat(key.stakedAmount)
+      }
+      validatorsCount += `, Total Fuse staked to validators: <strong>${staked}</strong>`
+    }
 
     return this.state.loading ? (
       ReactDOM.createPortal(<Loading networkBranch={networkBranch} />, document.getElementById('loadingContainer'))

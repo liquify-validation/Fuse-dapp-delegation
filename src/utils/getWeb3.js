@@ -97,7 +97,7 @@ export default async function getWeb3(netId, onAccountChange) {
     web3 = new Web3(new Web3.providers.HttpProvider(network.RPC))
   }
 
-  document.title = `${netIdName} - POA Validators DApp`
+  document.title = `${netIdName} - Fuse Delegation DApp`
 
   return {
     web3Instance: web3,

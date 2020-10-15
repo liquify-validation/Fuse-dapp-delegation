@@ -1,5 +1,5 @@
 /* eslint-disable no-throw-literal */
-import PoaConsensus from './PoaConsensus.contract'
+import FuseConsensus from './fuseConsensus.contract'
 import moment from 'moment'
 import helpers from './helpers'
 import helpersGlobal from '../utils/helpers'
@@ -25,7 +25,7 @@ export default class Metadata {
   async init({ web3, netId, addresses }) {
     this.web3 = web3
     this.netId = Number(netId)
-    this.gasPrice = web3.utils.toWei('2', 'gwei')
+    this.gasPrice = web3.utils.toWei('1', 'gwei')
 
     const { METADATA_ADDRESS, MOC } = addresses
     console.log('Metadata contract Address: ', METADATA_ADDRESS)
@@ -38,36 +38,36 @@ export default class Metadata {
     }
     this.addresses = addresses
 
-    const poaInstance = new PoaConsensus()
-    await poaInstance.init({ web3, netId, addresses })
-    this.mocRemoved = await poaInstance.isMasterOfCeremonyRemoved()
-    this.miningKeys = await poaInstance.getValidators()
+    this.fuseInstance = new FuseConsensus()
+    await this.fuseInstance.init({ web3, netId, addresses })
+    this.miningKeys = await this.fuseInstance.getValidators()
+    this.staked = await this.fuseInstance.getTotalStaked()
   }
   async createMetadata({
     firstName,
     lastName,
-    licenseId,
+    stakedAmount,
     fullAddress,
     state,
     zipcode,
-    expirationDate,
+    selfStaked,
     contactEmail,
     isCompany,
     votingKey,
     hasData
   }) {
     const methodToCall = hasData ? 'changeRequest' : 'createMetadata'
-    if (isCompany && isNaN(expirationDate)) {
-      expirationDate = 0
+    if (isCompany && isNaN(selfStaked)) {
+      selfStaked = 0
     }
     let input = [
       this.web3.utils.fromAscii(firstName),
       this.web3.utils.fromAscii(lastName),
-      this.web3.utils.fromAscii(licenseId),
+      this.web3.utils.fromAscii(stakedAmount),
       fullAddress,
       this.web3.utils.fromAscii(state),
       this.web3.utils.fromAscii(zipcode),
-      expirationDate
+      selfStaked
     ]
     if (helpersGlobal.isCompanyAllowed(this.netId)) {
       input.push(this.web3.utils.fromAscii(contactEmail))
@@ -86,9 +86,9 @@ export default class Metadata {
       lastName: 'Barinov',
       fullAddress: '755 Bounty Dr 202, Foster City',
       createdDate: '2017-12-18',
-      updatedDate: '',
-      expirationDate: '2021-07-23',
-      licenseId: '2206724',
+      delegatedAmount: '',
+      selfStaked: '2021-07-23',
+      stakedAmount: '2206724',
       us_state: 'CA',
       postal_code: '94404',
       contactEmail: '',
@@ -101,29 +101,26 @@ export default class Metadata {
       return {}
     }
 
-    let validatorData = await this.metadataInstance.methods.validators(miningKey).call()
-    let createdDate = validatorData.createdDate > 0 ? moment.unix(validatorData.createdDate).format('YYYY-MM-DD') : ''
-    let updatedDate = validatorData.updatedDate > 0 ? moment.unix(validatorData.updatedDate).format('YYYY-MM-DD') : ''
-    let expirationDate =
-      validatorData.expirationDate > 0 ? moment.unix(validatorData.expirationDate).format('YYYY-MM-DD') : ''
-    let contactEmail
-    if (validatorData.hasOwnProperty('contactEmail')) {
-      contactEmail = toAscii(validatorData.contactEmail)
-    }
-    let isCompany
-    if (validatorData.hasOwnProperty('isCompany')) {
-      isCompany = validatorData.isCompany
-    }
+    let createdDate = 'https://www.liquify-validation.com'
+    var validatorDict = await this.fuseInstance.getStakedToVal(miningKey)
+    // prettier-ignore
+    let stakedAmount = validatorDict.TOTAL[0].toFixed(2).toString()
+    // prettier-ignore
+    let delegatedAmount = validatorDict.DELEGATED[0].toFixed(2).toString()
+    // prettier-ignore
+    let selfStaked = validatorDict.STAKED[0].toFixed(2).toString()
+    let contactEmail = 'contact@liquify.com'
+    let isCompany = true
     return {
-      firstName: toAscii(validatorData.firstName),
-      lastName: toAscii(validatorData.lastName),
-      fullAddress: validatorData.fullAddress,
+      firstName: 'Liquify',
+      lastName: 'you',
+      fullAddress: '1234',
       createdDate,
-      updatedDate,
-      expirationDate,
-      licenseId: toAscii(validatorData.licenseId),
-      us_state: toAscii(validatorData.state),
-      postal_code: toAscii(validatorData.zipcode),
+      delegatedAmount,
+      selfStaked,
+      stakedAmount,
+      us_state: 'N/A',
+      postal_code: 'N/A',
       contactEmail,
       isCompany
     }
@@ -151,110 +148,109 @@ export default class Metadata {
     })
   }
 
-  async getPendingChange(miningKey) {
-    if (!miningKey) {
-      return {}
-    }
+  // async getPendingChange(miningKey) {
+  //   if (!miningKey) {
+  //     return {}
+  //   }
 
-    let pendingChanges = await this.metadataInstance.methods.pendingChanges(miningKey).call()
-    let createdDate = pendingChanges.createdDate > 0 ? moment.unix(pendingChanges.createdDate).format('YYYY-MM-DD') : ''
-    let updatedDate = pendingChanges.updatedDate > 0 ? moment.unix(pendingChanges.updatedDate).format('YYYY-MM-DD') : ''
-    let expirationDate =
-      pendingChanges.expirationDate > 0 ? moment.unix(pendingChanges.expirationDate).format('YYYY-MM-DD') : ''
-    let contactEmail
-    if (pendingChanges.hasOwnProperty('contactEmail')) {
-      contactEmail = toAscii(pendingChanges.contactEmail)
-    }
-    let isCompany
-    if (pendingChanges.hasOwnProperty('isCompany')) {
-      isCompany = pendingChanges.isCompany
-    }
-    return {
-      firstName: toAscii(pendingChanges.firstName),
-      lastName: toAscii(pendingChanges.lastName),
-      fullAddress: pendingChanges.fullAddress,
-      createdDate,
-      updatedDate,
-      expirationDate,
-      licenseId: toAscii(pendingChanges.licenseId),
-      us_state: toAscii(pendingChanges.state),
-      postal_code: toAscii(pendingChanges.zipcode),
-      minThreshold: pendingChanges.minThreshold,
-      contactEmail,
-      isCompany
-    }
-  }
+  //   let pendingChanges = await this.metadataInstance.methods.pendingChanges(miningKey).call()
+  //   let createdDate = pendingChanges.createdDate > 0 ? moment.unix(pendingChanges.createdDate).format('YYYY-MM-DD') : ''
+  //   let delegatedAmount = moment.unix(pendingChanges.delegatedAmount)
+  //   let selfStaked = pendingChanges.selfStaked > 0 ? moment.unix(pendingChanges.selfStaked).format('YYYY-MM-DD') : ''
+  //   let contactEmail
+  //   if (pendingChanges.hasOwnProperty('contactEmail')) {
+  //     contactEmail = toAscii(pendingChanges.contactEmail)
+  //   }
+  //   let isCompany
+  //   if (pendingChanges.hasOwnProperty('isCompany')) {
+  //     isCompany = pendingChanges.isCompany
+  //   }
+  //   return {
+  //     firstName: toAscii(pendingChanges.firstName),
+  //     lastName: toAscii(pendingChanges.lastName),
+  //     fullAddress: pendingChanges.fullAddress,
+  //     createdDate,
+  //     delegatedAmount,
+  //     selfStaked,
+  //     stakedAmount: toAscii(pendingChanges.stakedAmount),
+  //     us_state: toAscii(pendingChanges.state),
+  //     postal_code: toAscii(pendingChanges.zipcode),
+  //     minThreshold: pendingChanges.minThreshold,
+  //     contactEmail,
+  //     isCompany
+  //   }
+  // }
 
-  async getAllPendingChanges() {
-    let pendingChanges = []
-    for (let key of this.miningKeys) {
-      let pendingChange = await this.getPendingChange(key)
-      pendingChange.address = key
-      if (pendingChange.createdDate) {
-        pendingChanges.push(pendingChange)
-      }
-    }
-    return pendingChanges
-  }
+  // async getAllPendingChanges() {
+  //   let pendingChanges = []
+  //   for (let key of this.miningKeys) {
+  //     let pendingChange = await this.getPendingChange(key)
+  //     pendingChange.address = key
+  //     if (pendingChange.createdDate) {
+  //       pendingChanges.push(pendingChange)
+  //     }
+  //   }
+  //   return pendingChanges
+  // }
 
-  async confirmPendingChange({ miningKeyToConfirm, senderVotingKey, senderMiningKey }) {
-    const { methods } = this.metadataInstance
-    let alreadyConfirmed
-    if (methods.isValidatorAlreadyVoted) {
-      alreadyConfirmed = await methods.isValidatorAlreadyVoted(miningKeyToConfirm, senderMiningKey).call()
-    } else {
-      alreadyConfirmed = await methods.isAddressAlreadyVoted(miningKeyToConfirm, senderVotingKey).call()
-    }
-    console.log(alreadyConfirmed)
-    if (alreadyConfirmed) {
-      throw {
-        message: `You already confirmed this change.`
-      }
-    }
-    if (senderMiningKey === miningKeyToConfirm) {
-      throw {
-        message: `You cannot confirm your own changes.\n
-          Please ask other validators to verify your new information.`
-      }
-    } else if (senderMiningKey === '0x0000000000000000000000000000000000000000') {
-      throw {
-        message: messages.invalidaVotingKey
-      }
-    }
-    return await this.metadataInstance.methods
-      .confirmPendingChange(miningKeyToConfirm)
-      .send({ from: senderVotingKey, gasPrice: this.gasPrice })
-  }
+  // async confirmPendingChange({ miningKeyToConfirm, senderVotingKey, senderMiningKey }) {
+  //   const { methods } = this.metadataInstance
+  //   let alreadyConfirmed
+  //   if (methods.isValidatorAlreadyVoted) {
+  //     alreadyConfirmed = await methods.isValidatorAlreadyVoted(miningKeyToConfirm, senderMiningKey).call()
+  //   } else {
+  //     alreadyConfirmed = await methods.isAddressAlreadyVoted(miningKeyToConfirm, senderVotingKey).call()
+  //   }
+  //   console.log(alreadyConfirmed)
+  //   if (alreadyConfirmed) {
+  //     throw {
+  //       message: `You already confirmed this change.`
+  //     }
+  //   }
+  //   if (senderMiningKey === miningKeyToConfirm) {
+  //     throw {
+  //       message: `You cannot confirm your own changes.\n
+  //         Please ask other validators to verify your new information.`
+  //     }
+  //   } else if (senderMiningKey === '0x0000000000000000000000000000000000000000') {
+  //     throw {
+  //       message: messages.invalidaVotingKey
+  //     }
+  //   }
+  //   return await this.metadataInstance.methods
+  //     .confirmPendingChange(miningKeyToConfirm)
+  //     .send({ from: senderVotingKey, gasPrice: this.gasPrice })
+  // }
 
-  async getConfirmations({ miningKey }) {
-    return await this.metadataInstance.methods.confirmations(miningKey).call()
-  }
+  // async getConfirmations({ miningKey }) {
+  //   return await this.metadataInstance.methods.confirmations(miningKey).call()
+  // }
 
-  async getMinThreshold({ miningKey }) {
-    let validatorData = await this.metadataInstance.methods.validators(miningKey).call()
-    return validatorData.minThreshold
-  }
+  // async getMinThreshold({ miningKey }) {
+  //   let validatorData = await this.metadataInstance.methods.validators(miningKey).call()
+  //   return validatorData.minThreshold
+  // }
 
-  async finalize({ miningKeyToConfirm, senderVotingKey, senderMiningKey }) {
-    const confirmations = await this.getConfirmations({
-      miningKey: miningKeyToConfirm
-    })
-    const getMinThreshold = await this.getMinThreshold({
-      miningKey: miningKeyToConfirm
-    })
-    if (senderMiningKey === '0x0000000000000000000000000000000000000000') {
-      throw {
-        message: messages.invalidaVotingKey
-      }
-    }
-    if (Number(confirmations[0]) < Number(getMinThreshold)) {
-      throw {
-        message: `There is not enough confimations.\n
-          The minimum threshold to finalize is ${getMinThreshold}.`
-      }
-    }
-    return await this.metadataInstance.methods
-      .finalize(miningKeyToConfirm)
-      .send({ from: senderVotingKey, gasPrice: this.gasPrice })
-  }
+  // async finalize({ miningKeyToConfirm, senderVotingKey, senderMiningKey }) {
+  //   const confirmations = await this.getConfirmations({
+  //     miningKey: miningKeyToConfirm
+  //   })
+  //   const getMinThreshold = await this.getMinThreshold({
+  //     miningKey: miningKeyToConfirm
+  //   })
+  //   if (senderMiningKey === '0x0000000000000000000000000000000000000000') {
+  //     throw {
+  //       message: messages.invalidaVotingKey
+  //     }
+  //   }
+  //   if (Number(confirmations[0]) < Number(getMinThreshold)) {
+  //     throw {
+  //       message: `There is not enough confimations.\n
+  //         The minimum threshold to finalize is ${getMinThreshold}.`
+  //     }
+  //   }
+  //   return await this.metadataInstance.methods
+  //     .finalize(miningKeyToConfirm)
+  //     .send({ from: senderVotingKey, gasPrice: this.gasPrice })
+  // }
 }

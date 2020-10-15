@@ -10,9 +10,6 @@ class Validator extends Component {
     this.state = {
       confirmation: null
     }
-    this.props.metadataContract.getConfirmations({ miningKey: this.props.address }).then(confirmation => {
-      this.setState({ confirmation: confirmation[0] })
-    })
   }
 
   render() {
@@ -21,16 +18,16 @@ class Validator extends Component {
       children,
       contactEmail,
       createdDate,
-      expirationDate,
+      selfStaked,
       firstName,
       index,
       isCompany,
       lastName,
-      licenseId,
+      stakedAmount,
       netId,
       networkBranch,
       physicalAddresses,
-      updatedDate
+      delegatedAmount
     } = this.props
 
     if (helpers.isCompanyAllowed(netId) && !createdDate) {
@@ -46,6 +43,7 @@ class Validator extends Component {
     const unconfirmedAddresses = physicalAddresses.filter(a => !a.isConfirmed)
     const addresses = confirmedAddresses.concat(unconfirmedAddresses)
 
+    // prettier-ignore
     return (
       <div className="vl-Validator">
         <div className="vl-Validator_Header">
@@ -72,6 +70,7 @@ class Validator extends Component {
                 />
               )}
               {isCompany ? <ValidatorDataPair data={['Contact E-mail', contactEmail]} /> : null}
+              <ValidatorDataPair data={['Website', createdDate]} />
             </div>
           </div>
           <div className={`vl-Validator_Column`}>
@@ -81,10 +80,16 @@ class Validator extends Component {
               type={isCompany ? '' : 'notaryLicense'}
             />
             <div className="vl-Validator_InfoList">
-              {isCompany ? null : <ValidatorDataPair data={['License ID', licenseId]} />}
-              {isCompany ? null : <ValidatorDataPair data={['License Expiration', expirationDate]} />}
-              <ValidatorDataPair data={['Miner Creation Date', createdDate]} />
-              {updatedDate ? <ValidatorDataPair data={['Pending Change Date', updatedDate]} /> : null}
+              <ValidatorDataPair data={['Total Stake', stakedAmount]} />
+              <ValidatorDataPair data={['Self Staked', selfStaked]} />
+              <ValidatorDataPair data={['Delegated', delegatedAmount]} />
+            </div>
+          </div>
+          <div className={`vl-Validator_Column`}>
+            <div className="vl-Validator_InfoList">
+              <button size="lg" block>
+                Delegate
+              </button>
             </div>
           </div>
         </div>

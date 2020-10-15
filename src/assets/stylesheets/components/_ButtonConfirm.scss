@@ -17,11 +17,11 @@
     transition: 0.15s background-color;
 
     &#{ & }-core {
-        background-color: $poa-purple;
+        background-color: $fuse-green-light;
 
         &:active,
         &:hover {
-            background-color: darken($poa-purple, 10%);
+            background-color: darken($fuse-green-light, 10%);
         }
     }
 

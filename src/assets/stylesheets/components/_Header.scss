@@ -1,6 +1,6 @@
 .sw-Header {
     align-items: center;
-    background-color: $poa-purple;
+    background-color: $fuse-green-light;
     color: #fff;
     display: flex;
     flex-shrink: 0;
@@ -20,7 +20,7 @@
     }
 
     &#{ & }-core {
-        background-color: $poa-purple;
+        background-color: $fuse-green-light;
     }
 
     &#{ & }-sokol {

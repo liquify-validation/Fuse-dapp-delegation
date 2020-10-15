@@ -1,6 +1,6 @@
 .sw-Footer {
     align-items: center;
-    background-color: $poa-purple;
+    background-color: $fuse-green-light;
     color: #fff;
     display: flex;
     flex-shrink: 0;
@@ -12,7 +12,7 @@
     width: 100%;
 
     &#{ & }-core {
-        background-color: $poa-purple;
+        background-color: $fuse-green-light;
     }
 
     &#{ & }-sokol {
@@ -42,7 +42,7 @@
 }
 
 .sw-Footer_Text {
-    color: #fff;
+    color: #000000;
     flex-grow: 1;
     font-size: 11px;
     font-weight: 300;

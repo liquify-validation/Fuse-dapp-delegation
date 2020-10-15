@@ -1,5 +1,5 @@
 .sw-SearchBar {
-    background-color: $poa-purple-darker;
+    background-color: $fuse-green-dark;
     box-sizing: border-box;
     display: flex;
     flex-shrink: 0;
@@ -13,7 +13,7 @@
     z-index: 123;
 
     &#{ & }-core {
-        background-color: $poa-purple-darker;
+        background-color: $fuse-green-dark;
     }
     &#{ & }-sokol {
         background-color: $sokol-cyan-darker;

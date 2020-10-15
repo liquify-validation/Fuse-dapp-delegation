@@ -30,9 +30,9 @@
     .frm-FormRadioButton_Radio:checked + &#{ & }-core {
         &,
         &:hover {
-            background-color: $poa-purple;
-            border-color: $poa-purple;
-            box-shadow: 0 5px 10px 0 rgba($poa-purple, 0.3);
+            background-color: $fuse-green-light;
+            border-color: $fuse-green-light;
+            box-shadow: 0 5px 10px 0 rgba($fuse-green-light, 0.3);
             color: #fff;
         }
     }

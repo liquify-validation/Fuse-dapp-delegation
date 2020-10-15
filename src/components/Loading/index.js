@@ -7,10 +7,7 @@ import kovanLogo from './kovan.svg'
 const getLogoSrc = networkBranch => {
   return (
     {
-      core: poaLogo,
-      sokol: sokolLogo,
-      dai: xDaiLogo,
-      kovan: kovanLogo
+      core: poaLogo
     }[networkBranch] || poaLogo
   )
 }
