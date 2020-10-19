@@ -38,7 +38,7 @@ class App extends Component {
       web3Config: {},
       form: {
         fullAddress: '',
-        selfStaked: '',
+        validatorFee: '',
         postal_code: '',
         us_state: '',
         firstName: '',
@@ -78,7 +78,7 @@ class App extends Component {
           First Name: <b>${pendingChange.firstName}</b> <br/>
           Last Name: <b>${pendingChange.lastName}</b> <br/>
           Full Address: <b>${pendingChange.fullAddress}</b> <br/>
-          Expiration Date: <b>${pendingChange.selfStaked}</b> <br />
+          Expiration Date: <b>${pendingChange.validatorFee}</b> <br />
           License ID: <b>${pendingChange.stakedAmount}</b> <br/>
           US state: <b>${pendingChange.us_state}</b> <br/>
           Zip Code: <b>${pendingChange.postal_code}</b> <br/>
@@ -89,7 +89,7 @@ class App extends Component {
     this.setState({
       form: {
         fullAddress: currentData.fullAddress,
-        selfStaked: currentData.selfStaked,
+        validatorFee: currentData.validatorFee,
         postal_code: currentData.postal_code,
         us_state: currentData.us_state,
         firstName: currentData.firstName,
@@ -140,7 +140,7 @@ class App extends Component {
         helpers.generateAlert('warning', 'Warning!', `Please fill in all the fields - some of them are empty`)
         return false
       }
-      const isAfter = moment(this.state.form.selfStaked).isAfter(moment())
+      const isAfter = moment(this.state.form.validatorFee).isAfter(moment())
       if (!isAfter) {
         this.setState({ loading: false })
         helpers.generateAlert('warning', 'Warning!', 'Expiration date should be valid')
@@ -212,7 +212,7 @@ class App extends Component {
         fullAddress: this.state.form.fullAddress,
         state: this.state.form.us_state,
         zipcode: this.state.form.postal_code,
-        selfStaked: moment(this.state.form.selfStaked).unix(),
+        validatorFee: moment(this.state.form.validatorFee).unix(),
         contactEmail: this.state.form.contactEmail,
         isCompany: this.state.form.isCompany,
         votingKey: this.getVotingKey(),
@@ -347,11 +347,11 @@ class App extends Component {
               )}
               {isCompany ? null : (
                 <FormInput
-                  id="selfStaked"
+                  id="validatorFee"
                   onChange={this.onChangeFormField}
                   title="License expiration"
                   type="date"
-                  value={this.state.form.selfStaked}
+                  value={this.state.form.validatorFee}
                 />
               )}
               {isCompany ? null : (

@@ -35,22 +35,22 @@ export const SocialIcons = ({ extraClass = '', networkBranch = '' }) => {
       <IconTwitter
         backgroundColor={backgroundColor}
         color={iconColor}
-        text="POA Twitter"
-        url="https://twitter.com/poanetwork"
+        text="Fuse Twitter"
+        url="https://twitter.com/Fuse_network"
       />
       <IconTelegram
         backgroundColor={backgroundColor}
         color={iconColor}
-        text="POA Telegram"
-        url="https://t.me/oraclesnetwork"
+        text="Fuse Telegram"
+        url="https://t.me/fuseio"
       />
       <IconGithub
         backgroundColor={backgroundColor}
         color={iconColor}
-        text="POA Github"
-        url="https://github.com/poanetwork"
+        text="Fuse Github"
+        url="https://github.com/fuseio"
       />
-      <IconPOA text="POA Network" url="https://poa.net" backgroundColor={backgroundColor} color={iconColor} />
+      <IconPOA text="Fuse Network" url="https://fuse.io/" backgroundColor={backgroundColor} color={iconColor} />
     </div>
   )
 }

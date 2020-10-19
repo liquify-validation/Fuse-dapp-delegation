@@ -166,7 +166,7 @@ export default class AllValidators extends Component {
           address={validator.address}
           contactEmail={validator.contactEmail}
           createdDate={validator.createdDate}
-          selfStaked={validator.selfStaked}
+          validatorFee={validator.validatorFee}
           firstName={validator.firstName}
           fullAddress={validator.fullAddress}
           index={validator.index}

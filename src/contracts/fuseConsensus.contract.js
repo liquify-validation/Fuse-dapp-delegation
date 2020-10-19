@@ -1,5 +1,3 @@
-import helpers from './helpers'
-import { constants } from '../utils/constants'
 const fuseConsensusAbi = require('./Consensus.abi.json')
 
 export default class FuseConsensus {
@@ -10,7 +8,6 @@ export default class FuseConsensus {
     this.instance = new web3.eth.Contract(fuseConsensusAbi, CONSENSUS_ADDRESS)
   }
   async getValidators() {
-    console.log(this.instance)
     return await this.instance.methods.getValidators().call()
   }
   async getTotalStaked() {
@@ -23,18 +20,27 @@ export default class FuseConsensus {
     console.log(staked)
     return staked
   }
-  async getStakedToVal(val) {
+  async getStakedToVal(val, addr) {
     // prettier-ignore
     var totalStaked = (parseInt(await this.instance.methods.stakeAmount(val).call())) / 10 ** 18
     // prettier-ignore
-    var selfStaked = (parseInt(await this.instance.methods.delegatedAmount(val , val).call())) / 10 ** 18
+    var validatorFee = (parseInt(await this.instance.methods.delegatedAmount(val , val).call())) / 10 ** 18
 
-    var delegated = totalStaked - selfStaked
+    var yourStake = 0
+    if (addr !== '') {
+      yourStake = parseInt(await this.instance.methods.delegatedAmount(addr, val).call()) / 10 ** 18
+    }
+
+    var delegated = totalStaked - validatorFee
     // prettier-ignore
     return {
       'TOTAL': [totalStaked],
-      'STAKED': [selfStaked],
-      'DELEGATED': [delegated]
+      'STAKED': [validatorFee],
+      'DELEGATED': [delegated],
+      'YOUR': [yourStake]
     }
+  }
+  async getFee(val) {
+    return (parseInt(await this.instance.methods.validatorFee(val).call()) * 100) / 10 ** 18
   }
 }
