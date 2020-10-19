@@ -76,7 +76,7 @@ class Validator extends Component {
     // prettier-ignore
     do {
       var input = window.prompt("How much would you like to withdraw from " + val + "\n\n you have = " + yourStake.toString() + "Fuse staked")
-      var selection = parseInt(input, 10);
+      var selection = parseFloat(input, 10);
     }while((isNaN(selection) && isNaN(input)) || selection > yourStake || selection < 0);
 
     if (isNaN(selection) && !isNaN(input)) {
@@ -150,7 +150,7 @@ class Validator extends Component {
     // prettier-ignore
     do{
       var input = window.prompt("How much would you like to stake to " + val + "\n\n your balance = " + balanceStr.toString(), "")
-      var selection = parseInt(input, 10);
+      var selection = parseFloat(input, 10);
     }while((isNaN(selection) && isNaN(input)) || selection > balanceStr || selection < 0.1);
 
     if (isNaN(selection) && !isNaN(input)) {

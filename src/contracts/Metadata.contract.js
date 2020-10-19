@@ -26,19 +26,23 @@ export default class Metadata {
     await this.fuseInstance.init({ web3 })
     this.miningKeys = await this.fuseInstance.getValidators()
     this.staked = await this.fuseInstance.getTotalStaked()
+    this.useMetaMask = false
 
     if (window.ethereum) {
       try {
         await window.ethereum.enable()
         this.metaMask = new Web3(window.ethereum)
         this.netId = await this.metaMask.eth.net.getId()
+        this.useMetaMask = true
       } catch (e) {
         alert('Error: You denined access to account your delegation wont be shown')
+        this.useMetaMask = false
         //throw Error(messages.userDeniedAccessToAccount)
         return
       }
     } else {
       alert('No Metamask (or other Web3 Provider) installed! your delegation wont be shown')
+      this.useMetaMask = false
       return
     }
   }
@@ -101,7 +105,7 @@ export default class Metadata {
     }
 
     var addr = ''
-    if (this.metaMask !== 'undefined' && this.netId === 122) {
+    if (this.useMetaMask && this.netId === 122) {
       var account = await this.metaMask.eth.getAccounts()
       addr = account[0]
     }
