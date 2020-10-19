@@ -1,7 +1,7 @@
 const fuseConsensusAbi = require('./Consensus.abi.json')
 
 export default class FuseConsensus {
-  async init({ web3, netId, addresses }) {
+  async init({ web3 }) {
     // prettier-ignore
     const CONSENSUS_ADDRESS = '0x3014ca10b91cb3D0AD85fEf7A3Cb95BCAc9c0f79'
 
@@ -42,5 +42,9 @@ export default class FuseConsensus {
   }
   async getFee(val) {
     return (parseInt(await this.instance.methods.validatorFee(val).call()) * 100) / 10 ** 18
+  }
+  async generateWithdrawral(val, stake) {
+    var stakeDecimals = stake * 10 ** 18
+    return this.instance.methods.withdraw(val, stakeDecimals).encodeABI()
   }
 }

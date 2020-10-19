@@ -23,7 +23,7 @@ export default class Metadata {
     this.addresses = addresses
 
     this.fuseInstance = new FuseConsensus()
-    await this.fuseInstance.init({ web3, netId, addresses })
+    await this.fuseInstance.init({ web3 })
     this.miningKeys = await this.fuseInstance.getValidators()
     this.staked = await this.fuseInstance.getTotalStaked()
 
@@ -152,7 +152,6 @@ export default class Metadata {
   async getAllValidatorsData(netId) {
     let all = []
     return new Promise(async (resolve, reject) => {
-      console.log(this.miningKeys)
       const mocAddressLowercase = this.MOC_ADDRESS ? this.MOC_ADDRESS.toLowerCase() : ''
       for (let key of this.miningKeys) {
         let data

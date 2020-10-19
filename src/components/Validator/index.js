@@ -4,6 +4,7 @@ import helpers from '../../utils/helpers'
 import { PhysicalAddressValue } from '../PhysicalAddressValue'
 import { ValidatorDataPair } from '../ValidatorDataPair'
 import { ValidatorTitle } from '../ValidatorTitle'
+import FuseConsensus from '../../contracts/fuseConsensus.contract'
 
 // .button {
 //   background-color: #008CBA;
@@ -39,6 +40,84 @@ class Validator extends Component {
   }
 
   async withdrawFromVal(val) {
+    var fuseInstance = new FuseConsensus()
+
+    if (window.ethereum) {
+      try {
+        await window.ethereum.enable()
+      } catch (e) {
+        alert('Error: You denined access to account')
+        //throw Error(messages.userDeniedAccessToAccount)
+        return
+      }
+    } else {
+      alert('No Metamask (or other Web3 Provider) installed!')
+      return
+    }
+    const web3 = new Web3(window.ethereum)
+    const accounts = await web3.eth.getAccounts()
+
+    var netId = await web3.eth.net.getId()
+    if (netId !== 122) {
+      this.displayIncorectNet()
+      return
+    }
+
+    await fuseInstance.init({ web3 })
+
+    var amountStaked = await fuseInstance.getStakedToVal(val, accounts[0])
+    var yourStake = amountStaked.YOUR
+
+    if (yourStake === 0) {
+      alert('You have nothing staked to ' + val)
+      return
+    }
+
+    // prettier-ignore
+    do {
+      var input = window.prompt("How much would you like to withdraw from " + val + "\n\n you have = " + yourStake.toString() + "Fuse staked")
+      var selection = parseInt(input, 10);
+    }while((isNaN(selection) && isNaN(input)) || selection > yourStake || selection < 0);
+
+    if (isNaN(selection) && !isNaN(input)) {
+      alert('invalid input!')
+      return
+    } else if (isNaN(input)) {
+      alert('canceled')
+      return
+    }
+
+    var abiEncoded = await fuseInstance.generateWithdrawral(val, selection)
+
+    var contract_address = '0x3014ca10b91cb3D0AD85fEf7A3Cb95BCAc9c0f79'
+
+    // prettier-ignore
+    var transactionObject = {
+      'from' : accounts[0],
+      'to' : contract_address,
+      'value' : 0,
+      'data' : abiEncoded
+    }
+
+    var gasLimit = await web3.eth.estimateGas(transactionObject)
+
+    transactionObject.gas = gasLimit
+    transactionObject.value = 0
+
+    web3.eth.sendTransaction(transactionObject, (err, transactionId) => {
+      if (err) {
+        console.log('Withdraw failed', err)
+        alert('Withdraw failed ' + err.message)
+      } else {
+        if (window.confirm('Withdraw sent\n\nWould you like to check it on the explorer?')) {
+          var url = 'https://explorer.fuse.io/tx/'
+          var tranactionURL = url.concat(transactionId.toString())
+          var win = window.open(tranactionURL, '_blank')
+          win.focus()
+        }
+      }
+    })
+
     console.log('withdraw from val')
   }
 
@@ -72,7 +151,7 @@ class Validator extends Component {
     do{
       var input = window.prompt("How much would you like to stake to " + val + "\n\n your balance = " + balanceStr.toString(), "")
       var selection = parseInt(input, 10);
-    }while((isNaN(selection) && isNaN(input)) || selection > balanceStr || selection < 1);
+    }while((isNaN(selection) && isNaN(input)) || selection > balanceStr || selection < 0.1);
 
     if (isNaN(selection) && !isNaN(input)) {
       alert('invalid input!')

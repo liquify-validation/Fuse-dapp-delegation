@@ -6,13 +6,11 @@ import ProofOfPhysicalAddress from './contracts/ProofOfPhysicalAddress.contract'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import createBrowserHistory from 'history/createBrowserHistory'
-import getWeb3, { enableWallet } from './utils/getWeb3'
+import getWeb3 from './utils/getWeb3'
 import helpers from './utils/helpers'
 import networkAddresses from './contracts/addresses'
 import registerServiceWorker from './utils/registerServiceWorker'
 import { BaseLoader } from './components/BaseLoader'
-import { ButtonConfirm } from './components/ButtonConfirm'
-import { ButtonFinalize } from './components/ButtonFinalize'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { Router, Route, Redirect } from 'react-router-dom'
@@ -20,12 +18,10 @@ import { SearchBar } from './components/SearchBar'
 import { Loading } from './components/Loading'
 import { constants } from './utils/constants'
 import { getNetworkBranch } from './utils/utils'
-import messages from './utils/messages'
 
 const history = createBrowserHistory()
 const baseRootPath = '/fuse-dapps-delegation'
 const setMetadataPath = `${baseRootPath}/set`
-const pendingChangesPath = `${baseRootPath}/pending-changes`
 
 class AppMainRouter extends Component {
   constructor(props) {
@@ -37,7 +33,6 @@ class AppMainRouter extends Component {
     this.onConfirmPendingChange = this.onConfirmPendingChange.bind(this)
     this.onFinalize = this.onFinalize.bind(this)
     this.onNetworkChange = this.onNetworkChange.bind(this)
-    this.onPendingChangesRender = this.onPendingChangesRender.bind(this)
     this.onSearch = this.onSearch.bind(this)
     this.onSetRender = this.onSetRender.bind(this)
     this.toggleMobileMenu = this.toggleMobileMenu.bind(this)
@@ -131,37 +126,9 @@ class AppMainRouter extends Component {
   onRouteChange() {
     if (history.location.pathname === setMetadataPath) {
       this.setState({ showSearch: false })
-
-      if (this.state.injectedWeb3 === false) {
-        helpers.generateAlert('warning', 'Warning!', messages.noMetamaskFound)
-      } else {
-        this.checkForVotingKey(() => {})
-      }
     } else {
       this.setState({ showSearch: true })
     }
-  }
-
-  async checkForVotingKey(cb) {
-    try {
-      await enableWallet(this.onAccountChange)
-    } catch (error) {
-      helpers.generateAlert('error', 'Error!', error.message)
-      return
-    }
-    if (!this.state.votingKey || this.state.loading) {
-      helpers.generateAlert('warning', 'Warning!', messages.noMetamaskAccount)
-      return
-    }
-    if (!this.state.networkMatch) {
-      helpers.generateAlert('warning', 'Warning!', messages.networkMatchError(this.state.netId))
-      return
-    }
-    if (!this.state.isValidVotingKey) {
-      helpers.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
-      return
-    }
-    return cb()
   }
 
   toggleMobileMenu = () => {
@@ -205,24 +172,6 @@ class AppMainRouter extends Component {
       methodToCall: 'finalize',
       successMsg: 'You have successfully finalized the change!'
     })
-  }
-
-  onPendingChangesRender() {
-    const networkBranch = this.getValidatorsNetworkBranch()
-
-    return this.state.loading || this.state.error ? null : (
-      <AllValidators
-        methodToCall="getAllPendingChanges"
-        networkBranch={networkBranch}
-        ref="AllValidatorsRef"
-        searchTerm={this.state.searchTerm}
-        viewTitle={constants.navigationData[2].title}
-        web3Config={this.state}
-      >
-        <ButtonFinalize networkBranch={networkBranch} onClick={this.onFinalize} />
-        <ButtonConfirm networkBranch={networkBranch} onClick={this.onConfirmPendingChange} />
-      </AllValidators>
-    )
   }
 
   onAllValidatorsRender() {
@@ -306,7 +255,6 @@ class AppMainRouter extends Component {
               )}
             />
             <Route exact path={baseRootPath} render={this.onAllValidatorsRender} web3Config={this.state} />
-            <Route exact path={pendingChangesPath} render={this.onPendingChangesRender} />
             <Route exact path={setMetadataPath} render={this.onSetRender} />
           </section>
           <Footer baseRootPath={baseRootPath} networkBranch={networkBranch} />
