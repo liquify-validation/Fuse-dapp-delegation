@@ -23,20 +23,14 @@ export default class FuseConsensus {
   async getStakedToVal(val, addr) {
     // prettier-ignore
     var totalStaked = (parseInt(await this.instance.methods.stakeAmount(val).call())) / 10 ** 18
-    // prettier-ignore
-    var validatorFee = (parseInt(await this.instance.methods.delegatedAmount(val , val).call())) / 10 ** 18
-
     var yourStake = 0
     if (addr !== '') {
       yourStake = parseInt(await this.instance.methods.delegatedAmount(addr, val).call()) / 10 ** 18
     }
 
-    var delegated = totalStaked - validatorFee
     // prettier-ignore
     return {
       'TOTAL': [totalStaked],
-      'STAKED': [validatorFee],
-      'DELEGATED': [delegated],
       'YOUR': [yourStake]
     }
   }

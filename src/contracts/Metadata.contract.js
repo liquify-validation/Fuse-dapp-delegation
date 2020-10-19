@@ -82,23 +82,6 @@ export default class Metadata {
     })
   }
 
-  getMocData() {
-    // Barinov, Igor		755 Bounty Dr 202	Foster City	CA	94404 	41	2206724	07/23/2021
-    return {
-      firstName: 'Igor',
-      lastName: 'Barinov',
-      fullAddress: '755 Bounty Dr 202, Foster City',
-      createdDate: '2017-12-18',
-      delegatedAmount: '',
-      validatorFee: '2021-07-23',
-      stakedAmount: '2206724',
-      us_state: 'CA',
-      postal_code: '94404',
-      contactEmail: '',
-      isCompany: false
-    }
-  }
-
   async getValidatorData(miningKey) {
     if (!miningKey) {
       return {}
@@ -156,17 +139,8 @@ export default class Metadata {
   async getAllValidatorsData(netId) {
     let all = []
     return new Promise(async (resolve, reject) => {
-      const mocAddressLowercase = this.MOC_ADDRESS ? this.MOC_ADDRESS.toLowerCase() : ''
       for (let key of this.miningKeys) {
-        let data
-        if (key.toLowerCase() === mocAddressLowercase) {
-          if (this.mocRemoved) {
-            continue
-          }
-          data = this.getMocData()
-        } else {
-          data = await this.getValidatorData(key)
-        }
+        let data = await this.getValidatorData(key)
         data.address = key
         all.push(data)
       }

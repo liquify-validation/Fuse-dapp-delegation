@@ -42,34 +42,6 @@ class App extends Component {
     }
     this.defaultValues = null
   }
-  componentDidMount() {
-    this.setData.call(this)
-  }
-  async setData() {
-    if (this.props.web3Config.networkMatch) {
-      await this.setMetadata()
-    }
-    this.setState({ loading: false })
-  }
-  async setMetadata() {
-    const currentData = await this.getMetadataContract().getValidatorData(this.getMiningKey())
-    const hasData = currentData.createdDate ? true : false
-    this.defaultValues = currentData
-    this.setState({
-      form: {
-        fullAddress: currentData.fullAddress,
-        validatorFee: currentData.validatorFee,
-        postal_code: currentData.postal_code,
-        us_state: currentData.us_state,
-        firstName: currentData.firstName,
-        lastName: currentData.lastName,
-        stakedAmount: currentData.stakedAmount,
-        contactEmail: currentData.contactEmail,
-        isCompany: hasData ? currentData.isCompany : this.state.form.isCompany
-      },
-      hasData
-    })
-  }
   render() {
     const netId = Number(this.props.web3Config.netId)
     const { isCompany } = this.state.form

@@ -1,8 +1,6 @@
 import AllValidators from './components/AllValidators'
 import App from './App'
-import KeysManager from './contracts/KeysManager.contract'
 import Metadata from './contracts/Metadata.contract'
-import ProofOfPhysicalAddress from './contracts/ProofOfPhysicalAddress.contract'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import createBrowserHistory from 'history/createBrowserHistory'
@@ -30,8 +28,6 @@ class AppMainRouter extends Component {
     history.listen(this.onRouteChange.bind(this))
 
     this.onAllValidatorsRender = this.onAllValidatorsRender.bind(this)
-    this.onConfirmPendingChange = this.onConfirmPendingChange.bind(this)
-    this.onFinalize = this.onFinalize.bind(this)
     this.onNetworkChange = this.onNetworkChange.bind(this)
     this.onSearch = this.onSearch.bind(this)
     this.onSetRender = this.onSetRender.bind(this)
@@ -42,7 +38,6 @@ class AppMainRouter extends Component {
       error: false,
       injectedWeb3: false,
       networkMatch: false,
-      keysManager: null,
       loading: true,
       loadingNetworkBranch: null,
       metadataContract: null,
@@ -87,33 +82,14 @@ class AppMainRouter extends Component {
   }
 
   async initContracts({ web3, netId, addresses }) {
-    const keysManager = new KeysManager()
-    await keysManager.init({
-      web3,
-      netId,
-      addresses
-    })
     const metadataContract = new Metadata()
     await metadataContract.init({
       web3,
       netId,
       addresses
     })
-    let proofOfPhysicalAddressContract = new ProofOfPhysicalAddress()
-    try {
-      await proofOfPhysicalAddressContract.init({
-        web3,
-        netId,
-        addresses
-      })
-    } catch (e) {
-      console.error('Error initializing ProofOfPhysicalAddress', e)
-      proofOfPhysicalAddressContract = null
-    }
     const newState = {
-      keysManager,
       metadataContract,
-      proofOfPhysicalAddressContract,
       netId
     }
     this.setState(newState)
@@ -155,22 +131,6 @@ class AppMainRouter extends Component {
         console.error(error.message)
         helpers.generateAlert('error', 'Error!', error.message)
       }
-    })
-  }
-
-  async onConfirmPendingChange(event) {
-    await this._onBtnClick({
-      event,
-      methodToCall: 'confirmPendingChange',
-      successMsg: 'You have successfully confirmed the change!'
-    })
-  }
-
-  async onFinalize(event) {
-    await this._onBtnClick({
-      event,
-      methodToCall: 'finalize',
-      successMsg: 'You have successfully finalized the change!'
     })
   }
 
