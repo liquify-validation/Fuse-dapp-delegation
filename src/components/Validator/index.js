@@ -65,7 +65,7 @@ class Validator extends Component {
 
     await fuseInstance.init({ web3 })
 
-    var amountStaked = await fuseInstance.getStakedToVal(val, accounts[0])
+    var amountStaked = await fuseInstance.getValInfo(val, accounts[0])
     var yourStake = amountStaked.YOUR
 
     if (yourStake === 0) {

@@ -93,8 +93,8 @@ export default class Metadata {
       addr = account[0]
     }
 
-    var validatorDict = await this.fuseInstance.getStakedToVal(miningKey, addr)
-    var fee = await this.fuseInstance.getFee(miningKey)
+    var validatorDict = await this.fuseInstance.getValInfo(miningKey, addr)
+    var fee = validatorDict.FEE[0]
     // prettier-ignore
     let stakedAmount = validatorDict.TOTAL[0].toFixed(2).toString()
     var delegatedAmount = ''
