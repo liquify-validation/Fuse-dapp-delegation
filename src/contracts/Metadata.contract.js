@@ -22,6 +22,9 @@ export default class Metadata {
     }
     this.addresses = addresses
 
+    this.nodes = await fetch('http://95.216.161.92:5000//downbot/api/v0.1/nodes')
+    this.nodes = await this.nodes.json()
+
     this.fuseInstance = new FuseConsensus()
     await this.fuseInstance.init({ web3 })
     this.miningKeys = await this.fuseInstance.getValidators()
@@ -107,13 +110,9 @@ export default class Metadata {
     // prettier-ignore
     let validatorFee = fee.toString() + '%'
 
-    // prettier-ignore
-    let response = await fetch('http://95.216.161.92:5000//downbot/api/v0.1/node=' + miningKey)
-    response = await response.json()
-
-    let contactEmail = typeof response.Node.email !== 'undefined' ? response.Node.email : 'Not set'
-    let firstName = typeof response.Node.name !== 'undefined' ? response.Node.name : 'Not set'
-    let createdDate = typeof response.Node.website !== 'undefined' ? response.Node.website : 'Not set'
+    let contactEmail = typeof this.nodes[miningKey].email !== 'undefined' ? this.nodes[miningKey].email : 'Not set'
+    let firstName = typeof this.nodes[miningKey].name !== 'undefined' ? this.nodes[miningKey].name : 'Not set'
+    let createdDate = typeof this.nodes[miningKey].website !== 'undefined' ? this.nodes[miningKey].website : 'Not set'
     let isCompany = true
     return {
       firstName,
