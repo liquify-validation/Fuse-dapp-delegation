@@ -79,36 +79,46 @@ export default class AllValidators extends Component {
     })
 
     let validators = []
+    let delegateButton = this.props.delegateButton
 
     for (let [index, validator] of filtered.entries()) {
       let childrenWithProps = React.Children.map(this.props.children, child => {
         return React.cloneElement(child, { miningkey: validator.address })
       })
-      validators.push(
-        <Validator
-          address={validator.address}
-          contactEmail={validator.contactEmail}
-          createdDate={validator.createdDate}
-          validatorFee={validator.validatorFee}
-          firstName={validator.firstName}
-          fullAddress={validator.fullAddress}
-          index={validator.index}
-          isCompany={validator.isCompany}
-          key={index}
-          lastName={validator.lastName}
-          stakedAmount={validator.stakedAmount}
-          metadataContract={this.props.web3Config.metadataContract}
-          methodToCall={this.props.methodToCall}
-          netId={this.state.netId}
-          networkBranch={networkBranch}
-          physicalAddresses={validator.physicalAddresses}
-          postal_code={validator.postal_code}
-          delegatedAmount={validator.delegatedAmount}
-          us_state={validator.us_state}
-        >
-          {childrenWithProps}
-        </Validator>
-      )
+      var pushVal = true
+
+      // prettier-ignore
+      if (delegateButton === true && (validator.delegatedAmount === '0.00' || validator.delegatedAmount === '' || validator.delegatedAmount === 'Metamask not set')) {
+        pushVal = false
+      }
+
+      if (pushVal) {
+        validators.push(
+          <Validator
+            address={validator.address}
+            contactEmail={validator.contactEmail}
+            createdDate={validator.createdDate}
+            validatorFee={validator.validatorFee}
+            firstName={validator.firstName}
+            fullAddress={validator.fullAddress}
+            index={validator.index}
+            isCompany={validator.isCompany}
+            key={index}
+            lastName={validator.lastName}
+            stakedAmount={validator.stakedAmount}
+            metadataContract={this.props.web3Config.metadataContract}
+            methodToCall={this.props.methodToCall}
+            netId={this.state.netId}
+            networkBranch={networkBranch}
+            physicalAddresses={validator.physicalAddresses}
+            postal_code={validator.postal_code}
+            delegatedAmount={validator.delegatedAmount}
+            us_state={validator.us_state}
+          >
+            {childrenWithProps}
+          </Validator>
+        )
+      }
     }
     const isValidatorsPage = this.props.methodToCall === 'getAllValidatorsData'
     var validatorsCount = isValidatorsPage

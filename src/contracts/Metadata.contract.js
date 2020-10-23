@@ -1,8 +1,5 @@
 /* eslint-disable no-throw-literal */
 import FuseConsensus from './fuseConsensus.contract'
-import helpers from './helpers'
-import helpersGlobal from '../utils/helpers'
-import { constants } from '../utils/constants'
 import Web3 from 'web3'
 
 export default class Metadata {
@@ -11,24 +8,16 @@ export default class Metadata {
     this.netId = Number(netId)
     this.gasPrice = web3.utils.toWei('1', 'gwei')
 
-    const { METADATA_ADDRESS, MOC } = addresses
-    console.log('Metadata contract Address: ', METADATA_ADDRESS)
-
-    const MetadataAbi = await helpers.getABI(constants.NETWORKS[netId].BRANCH, 'ValidatorMetadata')
-
-    this.metadataInstance = new web3.eth.Contract(MetadataAbi, METADATA_ADDRESS)
-    if (MOC) {
-      this.MOC_ADDRESS = MOC
-    }
     this.addresses = addresses
-
+    var t0 = performance.now()
     this.nodes = await fetch('http://95.216.161.92:5000//downbot/api/v0.1/nodes')
     this.nodes = await this.nodes.json()
+    var t1 = performance.now()
+    console.log('time grab val data from downbot ' + (t1 - t0) + ' milliseconds.')
 
     this.fuseInstance = new FuseConsensus()
     await this.fuseInstance.init({ web3 })
     this.miningKeys = await this.fuseInstance.getValidators()
-    this.staked = await this.fuseInstance.getTotalStaked()
     this.useMetaMask = false
 
     if (window.ethereum) {
@@ -48,41 +37,6 @@ export default class Metadata {
       this.useMetaMask = false
       return
     }
-  }
-  async createMetadata({
-    firstName,
-    lastName,
-    stakedAmount,
-    fullAddress,
-    state,
-    zipcode,
-    validatorFee,
-    contactEmail,
-    isCompany,
-    votingKey,
-    hasData
-  }) {
-    const methodToCall = hasData ? 'changeRequest' : 'createMetadata'
-    if (isCompany && isNaN(validatorFee)) {
-      validatorFee = 0
-    }
-    let input = [
-      this.web3.utils.fromAscii(firstName),
-      this.web3.utils.fromAscii(lastName),
-      this.web3.utils.fromAscii(stakedAmount),
-      fullAddress,
-      this.web3.utils.fromAscii(state),
-      this.web3.utils.fromAscii(zipcode),
-      validatorFee
-    ]
-    if (helpersGlobal.isCompanyAllowed(this.netId)) {
-      input.push(this.web3.utils.fromAscii(contactEmail))
-      input.push(isCompany)
-    }
-    return await this.metadataInstance.methods[methodToCall](...input).send({
-      from: votingKey,
-      gasPrice: this.gasPrice
-    })
   }
 
   async getValidatorData(miningKey) {
@@ -138,12 +92,15 @@ export default class Metadata {
   async getAllValidatorsData(netId) {
     let all = []
     return new Promise(async (resolve, reject) => {
+      var t0 = performance.now()
       for (let key of this.miningKeys) {
         let data = await this.getValidatorData(key)
         data.address = key
         all.push(data)
       }
       resolve(all)
+      var t1 = performance.now()
+      console.log('time to pull all validator info ' + (t1 - t0) + ' milliseconds.')
     })
   }
 }

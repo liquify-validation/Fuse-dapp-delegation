@@ -33,6 +33,7 @@ class AppMainRouter extends Component {
     this.onSetRender = this.onSetRender.bind(this)
     this.toggleMobileMenu = this.toggleMobileMenu.bind(this)
     this.onAccountChange = this.onAccountChange.bind(this)
+    this.handleOptionChange = this.handleOptionChange.bind(this)
 
     this.state = {
       error: false,
@@ -48,7 +49,8 @@ class AppMainRouter extends Component {
       showMobileMenu: false,
       showSearch: history.location.pathname !== setMetadataPath,
       votingKey: null,
-      isValidVotingKey: false
+      isValidVotingKey: false,
+      delegateButton: false
     }
     window.addEventListener('load', () => this.initChain())
   }
@@ -144,12 +146,25 @@ class AppMainRouter extends Component {
         searchTerm={this.state.searchTerm}
         viewTitle={constants.navigationData[0].title}
         web3Config={this.state}
+        delegateButton={this.state.delegateButton}
       />
     )
   }
 
   onSearch(term) {
     this.setState({ searchTerm: term.target.value })
+  }
+
+  handleOptionChange(e) {
+    if (e.target.checked && !this.state.delegateButton) {
+      this.setState({
+        delegateButton: true
+      })
+    } else if (e.target.checked && this.state.delegateButton) {
+      this.setState({
+        delegateButton: false
+      })
+    }
   }
 
   getValidatorsNetworkBranch() {
@@ -192,6 +207,18 @@ class AppMainRouter extends Component {
           {this.state.showSearch ? (
             <SearchBar networkBranch={networkBranch} onSearch={this.onSearch} searchTerm={this.state.searchTerm} />
           ) : null}
+          <div className="radio">
+            <label>
+              <input
+                checked={this.state.delegateButton}
+                onClick={this.handleOptionChange}
+                className="form-check-input"
+                type="radio"
+                value="Click"
+              />
+              Show only nodes you've delegated too
+            </label>
+          </div>
           {this.state.loading
             ? ReactDOM.createPortal(
                 <Loading networkBranch={networkBranch} />,

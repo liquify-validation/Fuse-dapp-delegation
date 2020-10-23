@@ -14,12 +14,15 @@ export default class FuseConsensus {
   }
   async getTotalStaked() {
     var staked = 0
+    var t0 = performance.now()
     var vals = await this.getValidators()
     for (let key of vals) {
       staked += parseInt(await this.instance.methods.stakeAmount(key).call())
     }
     staked = staked / 10 ** 18
     console.log(staked)
+    var t1 = performance.now()
+    console.log('Call to doSomething took ' + (t1 - t0) + ' milliseconds.')
     return staked
   }
   async getValInfo(val, addr) {
