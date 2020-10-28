@@ -1,18 +1,18 @@
 .sw-Footer {
     align-items: center;
-    background-color: $fuse-green-light;
+    background-color: #052235;
     color: #fff;
     display: flex;
     flex-shrink: 0;
-    justify-content: center;
-    min-height: 60px;
+    justify-content: space-around;
+    min-height: 144px;
     overflow: hidden;
     padding: 16px 0;
     transition: background-color 0.25s ease-out;
     width: 100%;
 
     &#{ & }-core {
-        background-color: $fuse-green-light;
+        background-color: #052235;
     }
 
     &#{ & }-sokol {
@@ -29,22 +29,23 @@
 }
 
 .sw-Footer_Content {
-    @include content-layout-width();
+    max-width: 100%;
+    width: 100%;
     align-items: center;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
 
     @media (min-width: $breakpoint-md) {
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: space-around;
     }
 }
 
 .sw-Footer_Text {
-    color: #000000;
+    color: #ffffff;
     flex-grow: 1;
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 300;
     line-height: 1.2;
     margin: 0;

@@ -1,57 +1,47 @@
 import React, { Component } from 'react'
 import { constants } from '../../utils/constants'
 
-export default class NetworkSelect extends Component {
-  changeNetworkRPC(e) {
-    e.preventDefault()
-    let getCurrentClickedLink = e.target.innerHTML
-    let getCurrentClickedLinkId = ''
-    for (const _netId in constants.NETWORKS) {
-      if (constants.NETWORKS[_netId].FULLNAME === getCurrentClickedLink) {
-        getCurrentClickedLinkId = _netId
-      }
-    }
-    this.props.onChange({ value: getCurrentClickedLinkId })
+export default class NetworkInfo extends Component {
+  displayExplorer(e) {
+    window.open('https://explorer.fuse.io/')
+  }
+
+  displayHealth(e) {
+    window.open('https://health.fuse.io//')
   }
 
   render() {
     let networkFullNames = []
     let currentNetworkFullName = ''
 
-    const networks = constants.NETWORKS
-
-    let netIds = []
-    Object.keys(networks)
-      .sort((a, b) => (networks[a].SORTORDER > networks[b].SORTORDER ? 1 : -1))
-      .forEach(function(_netId) {
-        netIds.push(_netId)
-      })
-
     let selectedNetworkIndex = -1
 
-    netIds.forEach(_netId => {
-      networkFullNames.push(networks[_netId].FULLNAME)
-      if (networks[_netId].BRANCH === this.props.networkBranch) {
-        currentNetworkFullName = networks[_netId].FULLNAME
-        selectedNetworkIndex = networkFullNames.length - 1
-      }
-    })
+    currentNetworkFullName = 'Fuse Network'
+    selectedNetworkIndex = networkFullNames.length - 1
+
+    networkFullNames.push('Explorer')
+    networkFullNames.push('Health')
 
     const listItems = networkFullNames.map((name, index) => {
       let className = ''
-      if (index === selectedNetworkIndex) {
-        className = 'currentNetwork'
+      if (name === 'Explorer') {
+        return (
+          <li key={name.toString()} className={className}>
+            <button onClick={e => this.displayExplorer(e)}>{name}</button>
+          </li>
+        )
+      } else {
+        return (
+          <li key={name.toString()} className={className}>
+            <button onClick={e => this.displayHealth(e)}>{name}</button>
+          </li>
+        )
       }
-      return (
-        <li key={name.toString()} className={className}>
-          <button onClick={e => this.changeNetworkRPC(e)}>{name}</button>
-        </li>
-      )
     })
 
     return (
-      <div className={`NetworkSelect nl-NavigationLinks_Link opacityFull`}>
-        <div className={`NetworkSelect_Top`}>
+      <div className={`NetworkInfo nl-NavigationLinks_Link opacityFull`}>
+        <div className={`NetworkInfo_Top`}>
           <svg className={`nl-IconNetwork`} xmlns="http://www.w3.org/2000/svg" width="18" height="18">
             <path
               className={`nl-IconNetwork_Path nl-IconNetwork_Path-${this.props.networkBranch}`}
@@ -65,7 +55,7 @@ export default class NetworkSelect extends Component {
             <path d="M0 0h8L4 4 0 0z" />
           </svg>
         </div>
-        <ul className={`NetworkSelect_List`}>{listItems}</ul>
+        <ul className={`NetworkInfo_List`}>{listItems}</ul>
       </div>
     )
   }

@@ -3,12 +3,12 @@ import React from 'react'
 export const IconTwitter = ({
   backgroundColor = '#fff',
   color = '#000',
-  height = 30,
-  iconHeight = 16,
-  iconWidth = 16,
+  height = 40,
+  iconHeight = 26,
+  iconWidth = 26,
   text = '',
   url = '',
-  width = 30
+  width = 40
 }) => {
   return (
     <a

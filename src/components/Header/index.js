@@ -3,7 +3,7 @@ import { IconMobileMenu } from '../IconMobileMenu'
 import { Logo } from '../Logo'
 import { MobileMenuLinks } from '../MobileMenuLinks'
 import { NavigationLinks } from '../NavigationLinks'
-import NetworkSelect from '../NetworkSelect'
+import NetworkInfo from '../NetworkInfo'
 
 export const Header = ({
   baseRootPath = '',
@@ -24,7 +24,7 @@ export const Header = ({
         <div className="sw-Header_Links">
           <NavigationLinks networkBranch={networkBranch} />
         </div>
-        <NetworkSelect networkBranch={networkBranch} onChange={onChange} />
+        <NetworkInfo networkBranch={networkBranch} onChange={onChange} />
         <IconMobileMenu networkBranch={networkBranch} isOpen={showMobileMenu} onClick={onMenuToggle} />
       </div>
     </header>

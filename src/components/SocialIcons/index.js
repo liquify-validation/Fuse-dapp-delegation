@@ -19,10 +19,10 @@ const getIconColor = networkBranch => {
   return (
     {
       dai: '#333',
-      poa: '#89FDBD',
+      poa: '#052235',
       sokol: '#6ac9b9',
       kovan: '#6ac9b9'
-    }[networkBranch] || '#89FDBD'
+    }[networkBranch] || '#052235'
   )
 }
 
@@ -50,7 +50,6 @@ export const SocialIcons = ({ extraClass = '', networkBranch = '' }) => {
         text="Fuse Github"
         url="https://github.com/fuseio"
       />
-      <IconPOA text="Fuse Network" url="https://fuse.io/" backgroundColor={backgroundColor} color={iconColor} />
     </div>
   )
 }

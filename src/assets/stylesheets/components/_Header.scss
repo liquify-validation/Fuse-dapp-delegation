@@ -1,6 +1,6 @@
 .sw-Header {
     align-items: center;
-    background-color: $fuse-green-light;
+    background-color: #fff;
     color: #fff;
     display: flex;
     flex-shrink: 0;
@@ -20,7 +20,7 @@
     }
 
     &#{ & }-core {
-        background-color: $fuse-green-light;
+        background-color: #fff;
     }
 
     &#{ & }-sokol {
@@ -38,7 +38,8 @@
 }
 
 .sw-Header_Content {
-    @include content-layout-width();
+    max-width: 100%;
+    width: 100%;
     align-items: center;
     display: flex;
     flex-wrap: wrap;

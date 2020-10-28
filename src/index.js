@@ -244,7 +244,7 @@ class AppMainRouter extends Component {
             <Route exact path={baseRootPath} render={this.onAllValidatorsRender} web3Config={this.state} />
             <Route exact path={setMetadataPath} render={this.onSetRender} />
           </section>
-          <Footer baseRootPath={baseRootPath} networkBranch={networkBranch} />
+          <Footer />
         </div>
       </Router>
     ) : (

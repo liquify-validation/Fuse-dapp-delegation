@@ -1,24 +1,24 @@
-.NetworkSelect {
+.NetworkInfo {
 	display: flex;
 	@media (min-width: $breakpoint-md) {
 		position: relative;
 		margin-left: 34px;
 		&:hover { 
-			.NetworkSelect_List {
+			.NetworkInfo_List {
 				display: block;
 			}
 		}
 	}
 }
 
-.sw-Header_Content .NetworkSelect {
+.sw-Header_Content .NetworkInfo {
 	display: none;
 	@media (min-width: $breakpoint-md) {
 		display: flex;
 	}
 }
 
-.NetworkSelect_Top {
+.NetworkInfo_Top {
 	display: flex;
 	align-items: center;
 	opacity: .7;
@@ -52,7 +52,7 @@
 	}
 }
 
-.NetworkSelect_List {
+.NetworkInfo_List {
 	font-size: 14px;
 	font-weight: 600;
 	list-style: none;

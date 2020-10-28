@@ -14,9 +14,9 @@
 
 .vl-Validator_Header {
   border-bottom: 1px solid $base-border-color;
-  color: #f30000;
+  color:#333333;
   display: block;
-  font-size: 56px;
+  font-size: 18px;
   font-stretch: normal;
   font-style: normal;
   font-weight: 700;
@@ -34,14 +34,13 @@
 
 .vl-Validator_HeaderAddress {
   word-break: break-all;
-  font-size: 56px;
   margin-bottom: 10px;
 }
 
 .vl-Validator_HeaderHint {
   color: #777;
-  font-size: 56px;
-  font-weight: 1200;
+  font-size: 13px;
+  font-weight: 400;
   line-height: 1.2;
 }
 
@@ -98,9 +97,9 @@
 }
 
 .vl-button {
-  background-color: #89FDBD; /* Green */
+  background-color: $fuse-green-dark; /* Green */
   border: none;
-  color: white;
+  color: #000000;
   padding: 8px 8px;
   text-align: center;
   text-decoration: none;
