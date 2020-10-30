@@ -932,6 +932,11 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
   background-color: rgba(40, 172, 164, 0.5);
 }
 
+.react-switch {
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
 .ld-BaseLoader {
   align-items: center;
   background-color: rgba(255, 255, 255, 0.8);
@@ -1130,7 +1135,7 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
 }
 
 .sw-Footer_Content {
-  max-width: 100%;
+  max-width: 95%;
   width: 100%;
   align-items: center;
   display: flex;
@@ -1314,7 +1319,7 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
 }
 
 .sw-Header_Content {
-  max-width: 100%;
+  max-width: 95%;
   width: 100%;
   align-items: center;
   display: flex;

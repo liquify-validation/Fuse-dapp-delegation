@@ -44,6 +44,10 @@ export default class Metadata {
       return {}
     }
 
+    if (typeof this.nodes[miningKey].name === 'undefined') {
+      return {}
+    }
+
     var addr = ''
     if (this.useMetaMask && this.netId === 122) {
       var account = await this.metaMask.eth.getAccounts()
@@ -67,11 +71,13 @@ export default class Metadata {
     let contactEmail = typeof this.nodes[miningKey].email !== 'undefined' ? this.nodes[miningKey].email : 'Not set'
     let firstName = typeof this.nodes[miningKey].name !== 'undefined' ? this.nodes[miningKey].name : 'Not set'
     let createdDate = typeof this.nodes[miningKey].website !== 'undefined' ? this.nodes[miningKey].website : 'Not set'
+    // prettier-ignore
+    let upTime = typeof this.nodes[miningKey].upTime !== 'undefined' ? (this.nodes[miningKey].upTime * 100).toFixed(2).toString() + '%' : 'Not set'
     let isCompany = true
     return {
       firstName,
       lastName: 'you',
-      fullAddress: '1234',
+      upTime,
       createdDate,
       delegatedAmount,
       validatorFee,
@@ -95,8 +101,10 @@ export default class Metadata {
       var t0 = performance.now()
       for (let key of this.miningKeys) {
         let data = await this.getValidatorData(key)
-        data.address = key
-        all.push(data)
+        if (typeof data.isCompany !== 'undefined') {
+          data.address = key
+          all.push(data)
+        }
       }
       resolve(all)
       var t1 = performance.now()

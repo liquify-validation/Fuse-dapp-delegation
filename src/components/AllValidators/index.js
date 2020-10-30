@@ -50,7 +50,7 @@ export default class AllValidators extends Component {
       ...validator,
       physicalAddresses: [
         {
-          fullAddress: validator.fullAddress,
+          upTime: validator.upTime,
           us_state: validator.us_state,
           postal_code: validator.postal_code
         }
@@ -100,7 +100,7 @@ export default class AllValidators extends Component {
             createdDate={validator.createdDate}
             validatorFee={validator.validatorFee}
             firstName={validator.firstName}
-            fullAddress={validator.fullAddress}
+            upTime={validator.upTime}
             index={validator.index}
             isCompany={validator.isCompany}
             key={index}

@@ -16,6 +16,8 @@ import { SearchBar } from './components/SearchBar'
 import { Loading } from './components/Loading'
 import { constants } from './utils/constants'
 import { getNetworkBranch } from './utils/utils'
+import Switch from 'react-switch'
+import 'semantic-ui-css/semantic.min.css'
 
 const history = createBrowserHistory()
 const baseRootPath = '/fuse-dapps-delegation'
@@ -155,12 +157,12 @@ class AppMainRouter extends Component {
     this.setState({ searchTerm: term.target.value })
   }
 
-  handleOptionChange(e) {
-    if (e.target.checked && !this.state.delegateButton) {
+  handleOptionChange(checked) {
+    if (checked && !this.state.delegateButton) {
       this.setState({
         delegateButton: true
       })
-    } else if (e.target.checked && this.state.delegateButton) {
+    } else if (!checked && this.state.delegateButton) {
       this.setState({
         delegateButton: false
       })
@@ -207,8 +209,19 @@ class AppMainRouter extends Component {
           {this.state.showSearch ? (
             <SearchBar networkBranch={networkBranch} onSearch={this.onSearch} searchTerm={this.state.searchTerm} />
           ) : null}
-          <div className="radio">
+          <div className="sw-SearchBar_Content">
             <label>
+              <Switch
+                onChange={this.handleOptionChange}
+                checked={this.state.delegateButton}
+                className="react-switch"
+                height={16}
+              />
+              <span>
+                <strong>Show only nodes you've delegated too</strong>
+              </span>
+            </label>
+            {/* <label>
               <input
                 checked={this.state.delegateButton}
                 onClick={this.handleOptionChange}
@@ -217,7 +230,7 @@ class AppMainRouter extends Component {
                 value="Click"
               />
               Show only nodes you've delegated too
-            </label>
+            </label> */}
           </div>
           {this.state.loading
             ? ReactDOM.createPortal(

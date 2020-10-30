@@ -21,13 +21,13 @@ class App extends Component {
     this.setMetadata = this.setMetadata.bind(this)
     this.onChangeAutoComplete = address => {
       const form = this.state.form
-      form.fullAddress = address
+      form.upTime = address
       this.setState({ form })
     }
     this.state = {
       web3Config: {},
       form: {
-        fullAddress: '',
+        upTime: '',
         validatorFee: '',
         postal_code: '',
         us_state: '',
@@ -51,7 +51,7 @@ class App extends Component {
     const inputProps = {
       id: 'address',
       onChange: this.onChangeAutoComplete,
-      value: this.state.form.fullAddress
+      value: this.state.form.upTime
     }
     const AutocompleteItem = ({ formattedSuggestion }) => (
       <div className="vld-App_FormAutocompleteItem">

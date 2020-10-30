@@ -218,7 +218,8 @@ class Validator extends Component {
       netId,
       networkBranch,
       physicalAddresses,
-      delegatedAmount
+      delegatedAmount,
+      upTime
     } = this.props
 
     if (helpers.isCompanyAllowed(netId) && !createdDate) {
@@ -227,8 +228,14 @@ class Validator extends Component {
 
     var delegateBtn = false
 
+    var companyNameSet = false
+
     if(delegatedAmount !== '0.00' && delegatedAmount !== 'Metamask not set') {
       delegateBtn = true
+    }
+
+    if(firstName !== 'Not set') {
+      companyNameSet = true
     }
 
     const showAllValidators = this.props.methodToCall === 'getAllValidatorsData'
@@ -248,38 +255,34 @@ class Validator extends Component {
             <div className="vl-Validator_HeaderAddress">{indexAndAddress}</div>
             <div className="vl-Validator_HeaderHint">Wallet Address</div>
           </div>
-          {showAllValidators ? null : (
-            <div className="vl-Validator_HeaderConfirmations">{this.state.confirmation} confirmations</div>
-          )}
         </div>
         <div className="vl-Validator_Body">
           <div className={`vl-Validator_Column`}>
+          {!companyNameSet ? null :
             <ValidatorTitle
               networkBranch={networkBranch}
-              text={titleFirstColumn}
+              text={fullName}
               type={isCompany ? 'company' : 'notary'}
+              email={contactEmail}
+              website={createdDate}
             />
+          }
             <div className="vl-Validator_InfoList">
-              <ValidatorDataPair data={['Full Name', fullName]} />
-              {isCompany ? null : (
-                <ValidatorDataPair
-                  data={['Address', <PhysicalAddressValue networkBranch={networkBranch} addresses={addresses} />]}
-                />
-              )}
-              {isCompany ? <ValidatorDataPair data={['Contact E-mail', contactEmail]} /> : null}
-              <ValidatorDataPair data={['Website', createdDate]} />
+              <ValidatorDataPair data={['Total Stake', stakedAmount]} />
+              <ValidatorDataPair data={['Validator Fee', validatorFee]} />
             </div>
           </div>
           <div className={`vl-Validator_Column`}>
+          {!companyNameSet ? null :
             <ValidatorTitle
               networkBranch={networkBranch}
               text={titleSecondColumn}
               type={isCompany ? '' : 'notaryLicense'}
             />
+          }
             <div className="vl-Validator_InfoList">
-              <ValidatorDataPair data={['Total Stake', stakedAmount]} />
-              <ValidatorDataPair data={['Validator Fee', validatorFee]} />
               <ValidatorDataPair data={['Delegated', delegatedAmount]} />
+              <ValidatorDataPair data={['Uptime', upTime]} />
             </div>
           </div>
           <div className={`vl-Validator_Column`}>

@@ -18,9 +18,10 @@ export const PhysicalAddressValue = ({ addresses, networkBranch = '' }) => {
 
     return (
       <span className="vl-PhysicalAddressValue" key={index}>
-        <span className="vl-PhysicalAddressValue_Address">{`${
-          address.fullAddress
-        }, ${address.us_state.toUpperCase()}, ${address.postal_code}`}</span>
+        <span className="vl-PhysicalAddressValue_Address">
+          {`${address.upTime}, ${address.us_state.toUpperCase()}, 
+          ${address.postal_code}`}
+        </span>
         {confirmedIcon}
       </span>
     )
