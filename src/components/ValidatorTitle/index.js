@@ -17,9 +17,19 @@ export const ValidatorTitle = ({
   website = ''
 }) => {
   var popOut = false
+  var mailSet = false
+  var mailTo = ''
 
   if (email !== '' && website !== '' && (email !== 'Not set' || website !== 'Not set')) {
     popOut = true
+    if (website.substring(0, 4) !== 'http') {
+      website = 'https://' + website
+    }
+
+    if (email !== 'Not set') {
+      mailSet = true
+      mailTo = 'mailto:' + email
+    }
   }
   return (
     <h3 className={`vl-ValidatorTitle ${extraClassName}`}>
@@ -30,11 +40,13 @@ export const ValidatorTitle = ({
           <Grid centered divided columns={2}>
             <Grid.Column textAlign="center">
               <Header as="h4">Website</Header>
-              <p> {website} </p>
+              <a href={website} target="_blank">
+                {website}
+              </a>
             </Grid.Column>
             <Grid.Column textAlign="center">
               <Header as="h4">Email</Header>
-              <p> {email} </p>
+              {mailSet ? <a href={mailTo}>{email}</a> : <p> {email} </p>}
             </Grid.Column>
           </Grid>
         </Popup>
