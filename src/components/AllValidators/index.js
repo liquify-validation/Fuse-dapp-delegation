@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import Validator from '../Validator'
+import ValidatorGroup from '../ValidatorGroup'
 import { Loading } from '../Loading'
 import { MainTitle } from '../MainTitle'
 
@@ -58,6 +59,9 @@ export default class AllValidators extends Component {
     }))
     return augmentedValidators
   }
+  onlyUnique(value, index, self) {
+    return self.indexOf(value) === index
+  }
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.web3Config.netId !== this.state.netId) {
       this.getValidatorsData.call(this)
@@ -79,7 +83,19 @@ export default class AllValidators extends Component {
     })
 
     let validators = []
+    let operators = []
     let delegateButton = this.props.delegateButton
+    var dict = {}
+
+    for (let [index, validator] of filtered.entries()) {
+      operators.push(validator.firstName)
+    }
+    let unique = operators.filter(this.onlyUnique)
+
+    var op
+    for (op in unique) {
+      dict[unique[op]] = []
+    }
 
     for (let [index, validator] of filtered.entries()) {
       let childrenWithProps = React.Children.map(this.props.children, child => {
@@ -93,7 +109,7 @@ export default class AllValidators extends Component {
       }
 
       if (pushVal) {
-        validators.push(
+        dict[validator.firstName].push(
           <Validator
             address={validator.address}
             contactEmail={validator.contactEmail}
@@ -120,9 +136,18 @@ export default class AllValidators extends Component {
         )
       }
     }
+
+    var ops
+    for (ops in dict) {
+      // prettier-ignore
+      if(dict[ops].length !== 0) {
+        validators.push(<ValidatorGroup array={dict[ops]} />)
+      }
+    }
+
     const isValidatorsPage = this.props.methodToCall === 'getAllValidatorsData'
     var validatorsCount = isValidatorsPage
-      ? `Total number of validators: <strong>${this.state.validators.length}</strong>`
+      ? `Total number of Approved validators: <strong>${this.state.validators.length}</strong>`
       : ''
     if (isValidatorsPage) {
       var staked = 0

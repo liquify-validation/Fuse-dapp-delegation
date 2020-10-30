@@ -246,40 +246,22 @@ class Validator extends Component {
     const confirmedAddresses = physicalAddresses.filter(a => a.isConfirmed)
     const unconfirmedAddresses = physicalAddresses.filter(a => !a.isConfirmed)
     const addresses = confirmedAddresses.concat(unconfirmedAddresses)
+    const addressToShow = "Wallet Address: " + address
 
     // prettier-ignore
     return (
-      <div className="vl-Validator">
-        <div className="vl-Validator_Header">
-          <div className="vl-Validator_AddressAndHint">
-            <div className="vl-Validator_HeaderAddress">{indexAndAddress}</div>
-            <div className="vl-Validator_HeaderHint">Wallet Address</div>
-          </div>
-        </div>
         <div className="vl-Validator_Body">
+         
+              <div className="vl-Validator_HeaderAddress">{addressToShow}</div>
+              
+            
           <div className={`vl-Validator_Column`}>
-          {!companyNameSet ? null :
-            <ValidatorTitle
-              networkBranch={networkBranch}
-              text={fullName}
-              type={isCompany ? 'company' : 'notary'}
-              email={contactEmail}
-              website={createdDate}
-            />
-          }
             <div className="vl-Validator_InfoList">
               <ValidatorDataPair data={['Total Stake', stakedAmount]} />
               <ValidatorDataPair data={['Validator Fee', validatorFee]} />
             </div>
           </div>
           <div className={`vl-Validator_Column`}>
-          {!companyNameSet ? null :
-            <ValidatorTitle
-              networkBranch={networkBranch}
-              text={titleSecondColumn}
-              type={isCompany ? '' : 'notaryLicense'}
-            />
-          }
             <div className="vl-Validator_InfoList">
               <ValidatorDataPair data={['Delegated', delegatedAmount]} />
               <ValidatorDataPair data={['Uptime', upTime]} />
@@ -296,8 +278,6 @@ class Validator extends Component {
             </div>
           </div>
         </div>
-        {children ? <div className="vl-Validator_Footer">{children}</div> : null}
-      </div>
     )
   }
 }
