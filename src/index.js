@@ -18,6 +18,7 @@ import { constants } from './utils/constants'
 import { getNetworkBranch } from './utils/utils'
 import Switch from 'react-switch'
 import 'semantic-ui-css/semantic.min.css'
+import { Message } from 'semantic-ui-react'
 
 const history = createBrowserHistory()
 const baseRootPath = '/fuse-dapps-delegation'
@@ -70,7 +71,7 @@ class AppMainRouter extends Component {
           netId: web3Config.netId,
           addresses
         })
-        await this.onAccountChange(web3Config.defaultAccount)
+        await this.onAccountChange()
         this.setState({
           injectedWeb3: web3Config.injectedWeb3,
           networkMatch: web3Config.networkMatch
@@ -83,6 +84,11 @@ class AppMainRouter extends Component {
         this.setState({ loading: false, error: true, loadingNetworkBranch: null })
         helpers.generateAlert('error', 'Error!', error.message)
       })
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', function(accounts) {
+        window.location.reload()
+      })
+    }
   }
 
   async initContracts({ web3, netId, addresses }) {
@@ -99,7 +105,7 @@ class AppMainRouter extends Component {
     this.setState(newState)
   }
 
-  async onAccountChange(votingKey) {
+  async onAccountChange() {
     console.log(`Accounts set`)
   }
 

@@ -26,6 +26,14 @@ export default class Metadata {
         this.metaMask = new Web3(window.ethereum)
         this.netId = await this.metaMask.eth.net.getId()
         this.useMetaMask = true
+        if (this.netId !== 122) {
+          // prettier-ignore
+          if (window.confirm('You are not currently connected to the Fuse network, please switch the current provider.\n\nDo you need instructions on how to do this?')) 
+          {
+            var win = window.open('https://docs.fuse.io/the-fuse-studio/getting-started/how-to-add-fuse-to-your-metamask', '_blank')
+            win.focus()
+          }
+        }
       } catch (e) {
         alert('Error: You denined access to account your delegation wont be shown')
         this.useMetaMask = false
